@@ -1,7 +1,5 @@
 @extends('layouts.myapp')
 
-@section('title', 'Post details')
-
 @section('content')
     <ul>
         <li>{{$post->image_filepath ?? ''}}</li>
