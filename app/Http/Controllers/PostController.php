@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class PostController extends Controller
 {
@@ -44,13 +45,12 @@ class PostController extends Controller
         $validationData = $request->validate([
             'caption' => 'required|max:255',
             'image_filepath' => 'nullable|max:500',
-            'user_id' => 'required|integer'
         ]);
 
         $p = new Post;
         $p->caption = $validationData['caption'];
         $p->image_filepath = $validationData['image_filepath'];
-        $p->user_id = $validationData['user_id'];
+        $p->user_id = Auth::user()->getAuthIdentifier();
         $p->save();
 
         session()->flash('message', 'Post was created');
@@ -75,9 +75,9 @@ class PostController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Post $post)
     {
-        //
+       return view('posts.edit', ['post' => $post]);
     }
 
     /**
@@ -87,9 +87,20 @@ class PostController extends Controller
      * @param int $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Post $post)
     {
-        //
+        $validationData = $request->validate([
+            'caption' => 'required|max:255',
+            'image_filepath' => 'nullable|max:500',
+        ]);
+
+        $post->caption = $validationData['caption'];
+        $post->image_filepath = $validationData['image_filepath'];
+        $post->user_id = Auth::user()->getAuthIdentifier();
+        $post->save();
+
+        session()->flash('message', 'Post was updated');
+        return redirect()->route('posts.show',['post' => $post]);
     }
 
     /**
@@ -100,6 +111,7 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+
         $post->delete();
         // session()->flash('message', 'Post was deleted');
         return redirect()->route('posts.index')->with('message','Post was deleted');
