@@ -14,6 +14,8 @@
         <button type="submit">Delete</button>
     </form>
 
+    <a href="{{route('posts.edit',['post'=>$post])}}">Edit</a>
+
     <a href="{{route('posts.index')}}">Back</a>
 
 @endsection
