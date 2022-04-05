@@ -20,6 +20,6 @@ class CommentTableSeeder extends Seeder
         $c->post_id = 1;
         $c->save();
 
-        Comment::factory()->count(35)->create();
+        Comment::factory()->count(5)->create();
     }
 }
