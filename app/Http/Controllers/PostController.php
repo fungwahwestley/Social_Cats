@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Comment;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -66,7 +67,8 @@ class PostController extends Controller
      */
     public function show(Post $post)
     {
-        return view('posts.show', ['post' => $post]);
+        $comments = $post->comments()->get();
+        return view('posts.show', ['post' => $post, 'comments' => $comments]);
     }
 
     /**
@@ -116,4 +118,6 @@ class PostController extends Controller
         // session()->flash('message', 'Post was deleted');
         return redirect()->route('posts.index')->with('message','Post was deleted');
     }
+
+
 }
