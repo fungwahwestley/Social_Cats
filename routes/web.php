@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\CommentController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -27,9 +28,16 @@ Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.
 Route::get('/posts{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
 Route::post('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
 
-Route::get('/example', [PostController::class,'example']);
+//comment routes
+Route::post('/posts/{post}', [CommentController::class, 'store'])->name('comments.store');
+//Route::delete('/posts/{post}', [CommentController::class, 'destroy'])->name('comments.destroy');
+//Route::get('/posts{post}/edit', [CommentController::class, 'edit'])->name('comments.edit');
+//Route::post('/posts/{post}', [CommentController::class, 'update'])->name('comments.update');
 
+//profile routes
 Route::get('/profile',[ProfileController::class, 'index'])->name('profile.index');
+
+Route::get('/example', [PostController::class,'example']);
 
 Route::middleware(['auth'])->group(function(){
     Route::view('/admin','admin')->name('admin');
