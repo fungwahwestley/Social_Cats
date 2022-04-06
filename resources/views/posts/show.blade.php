@@ -28,7 +28,7 @@
     <ul>
         <p> Comments: </p>
         @foreach($comments as $comment)
-            <li>{{$comment->content}} by {{$comment->user->name}}</li>
+            <li><a href="{{route('comments.show', ['post'=>$post,'comment'=>$comment])}}">{{$comment->content}} by {{$comment->user->name}}</li>
         @endforeach
     </ul>
 
