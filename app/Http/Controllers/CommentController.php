@@ -9,6 +9,16 @@ use Illuminate\Support\Facades\Auth;
 
 class CommentController extends Controller
 {
+    /**
+     * Display the specified resource.
+     *
+     * @param int $post
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Comment $comment, Post $post)
+    {
+        return view('comments.show', ['comment' => $comment, 'post'=>$post]);
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -16,9 +26,9 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Comment $comment)
+    public function edit(Comment $comment, Post $post)
     {
-        return view('comments.edit', ['comment' => $comment]);
+        return view('comments.edit', ['comment' => $comment, 'post'=>$post]);
     }
 
     /**
@@ -28,7 +38,7 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Comment $comment)
+    public function update(Request $request, Comment $comment, Post $post)
     {
         $validationData = $request->validate([
             'content' => 'required|max:255',
@@ -36,11 +46,11 @@ class CommentController extends Controller
 
         $comment->content = $validationData['content'];
         $comment->user_id = Auth::user()->getAuthIdentifier();
-        $comment->post_id = $comment->post()->id;
+        $comment->post_id = $comment->post_id;
         $comment->save();
 
         session()->flash('message', 'Comment was updated');
-        return redirect()->route('posts.show',['post' => $comment->post()]);
+        return redirect()->route('comments.show',['comment'=>$comment, 'post'=>$post]);
     }
 
     /**
@@ -49,10 +59,10 @@ class CommentController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Comment $comment)
+    public function destroy(Comment $comment, Post $post)
     {
         $comment->delete();
-        // session()->flash('message', 'Post was deleted');
+
         return redirect()->route('posts.index')->with('message','Comment was deleted');
     }
 
