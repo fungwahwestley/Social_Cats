@@ -13,6 +13,7 @@
 
     <form method="POST" action="{{route('comments.update', ['comment'=>$comment, 'post'=>$post])}}">
         @csrf
+        @method('PUT')
         <p>Comment: <input type="text" name="content" value="{{$comment->content}}"></p>
         <input type="submit" value="Update">
         <a href="{{route('comments.show',['comment'=>$comment,'post'=>$post])}}">Cancel</a>
