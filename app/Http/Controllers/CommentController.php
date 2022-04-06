@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Gate;
 use App\Models\Post;
 use App\Models\Comment;
 use Illuminate\Http\Request;
@@ -17,25 +18,29 @@ class CommentController extends Controller
      */
     public function show(Comment $comment, Post $post)
     {
-        return view('comments.show', ['comment' => $comment, 'post'=>$post]);
+        return view('comments.show', ['comment' => $comment, 'post' => $post]);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function edit(Comment $comment, Post $post)
     {
-        return view('comments.edit', ['comment' => $comment, 'post'=>$post]);
+        if (!Gate::allows('update-comment', $comment)) {
+            abort(403);
+        }
+        return view('comments.edit', ['comment' => $comment, 'post' => $post]);
+
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
+     * @param \Illuminate\Http\Request $request
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Comment $comment, Post $post)
@@ -50,26 +55,29 @@ class CommentController extends Controller
         $comment->save();
 
         session()->flash('message', 'Comment was updated');
-        return redirect()->route('comments.show',['comment'=>$comment, 'post'=>$post]);
+        return redirect()->route('comments.show', ['comment' => $comment, 'post' => $post]);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param int $id
      * @return \Illuminate\Http\Response
      */
     public function destroy(Comment $comment, Post $post)
     {
+        if (!Gate::allows('delete-comment', $comment)) {
+            abort(403);
+        }
         $comment->delete();
 
-        return redirect()->route('posts.index')->with('message','Comment was deleted');
+        return redirect()->route('posts.index')->with('message', 'Comment was deleted');
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request, Post $post)
@@ -85,6 +93,6 @@ class CommentController extends Controller
         $c->save();
 
         session()->flash('message', 'Comment was created');
-        return redirect()->route('posts.show', ['post'=>$post]);
+        return redirect()->route('posts.show', ['post' => $post]);
     }
 }
