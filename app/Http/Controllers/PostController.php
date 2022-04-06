@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Comment;
+use Illuminate\Support\Facades\Gate;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -79,7 +79,11 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-       return view('posts.edit', ['post' => $post]);
+        if (! Gate::allows('update-post', $post)) {
+            abort(403);
+        }else{
+            return view('posts.edit', ['post' => $post]);
+        }
     }
 
     /**
@@ -113,6 +117,9 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
+        if (! Gate::allows('delete-post', $post)) {
+            abort(403);
+        }
 
         $post->delete();
         // session()->flash('message', 'Post was deleted');
