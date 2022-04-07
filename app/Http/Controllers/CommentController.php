@@ -7,6 +7,7 @@ use App\Models\Post;
 use App\Models\Comment;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Providers\Response;
 
 class CommentController extends Controller
 {
@@ -29,7 +30,7 @@ class CommentController extends Controller
      */
     public function edit(Comment $comment, Post $post)
     {
-        if (!Gate::allows('update-comment', $comment)) {
+        if (!(Gate::allows('update-comment', $comment) || Gate::allows('update-comment-admin'))) {
             abort(403);
         }
         return view('comments.edit', ['comment' => $comment, 'post' => $post]);
@@ -66,7 +67,7 @@ class CommentController extends Controller
      */
     public function destroy(Comment $comment, Post $post)
     {
-        if (!Gate::allows('delete-comment', $comment)) {
+        if (!(Gate::allows('delete-comment', $comment) || Gate::allows('delete-comment-admin'))) {
             abort(403);
         }
         $comment->delete();

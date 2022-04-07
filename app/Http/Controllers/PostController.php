@@ -6,13 +6,16 @@ use Illuminate\Support\Facades\Gate;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use App\Providers\Response;
 
 class PostController extends Controller
 {
 
-    public function example(Post $foo){
+    public function example(Post $foo)
+    {
         dd($foo);
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -79,11 +82,16 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        if (! Gate::allows('update-post', $post)) {
+        if(!Gate::allows('update-post-admin')){
             abort(403);
-        }else{
-            return view('posts.edit', ['post' => $post]);
+        }else if(Gate::allows('update-post', $post)){
+            abort(403);
         }
+
+        return view('posts.edit', ['post' => $post]);
+
+
+
     }
 
     /**
@@ -106,7 +114,7 @@ class PostController extends Controller
         $post->save();
 
         session()->flash('message', 'Post was updated');
-        return redirect()->route('posts.show',['post' => $post]);
+        return redirect()->route('posts.show', ['post' => $post]);
     }
 
     /**
@@ -117,13 +125,13 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        if (! Gate::allows('delete-post', $post)) {
+        if (!(Gate::allows('delete-post', $post) || Gate::allows('delete-post-admin'))) {
             abort(403);
         }
 
         $post->delete();
         // session()->flash('message', 'Post was deleted');
-        return redirect()->route('posts.index')->with('message','Post was deleted');
+        return redirect()->route('posts.index')->with('message', 'Post was deleted');
     }
 
 
