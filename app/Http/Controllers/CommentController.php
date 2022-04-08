@@ -11,6 +11,30 @@ use App\Providers\Response;
 
 class CommentController extends Controller
 {
+    public function page(Post $post){
+        return view('posts.show-api', ['post'=>$post]);
+    }
+
+    public function apiIndex(Post $post)
+    {
+        return $post->comments()->get();
+    }
+
+    public function apiStore(Request $request, Post $post){
+        $validationData = $request->validate([
+            'content' => 'required|max:255',
+        ]);
+
+        $c = new Comment;
+        $c->content = $validationData['content'];
+        $c->user_id = 1;
+        $c->post_id = $post->id;
+        $c->save();
+
+        return $c;
+    }
+
+
     /**
      * Display the specified resource.
      *
