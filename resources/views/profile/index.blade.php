@@ -6,8 +6,16 @@
 
 @section('content')
     <ul>
-        @foreach($posts as $post)
-                <li><a href="{{route('posts.show', ['post'=>$post])}}">{{$post->caption}} by {{$post->user->name}}</a></li>
-        @endforeach
+        <p>User information: </p>
+        <li>Name: {{$user->name}}</li>
+        <li>Email: {{$user->email}}</li>
+        @if($user->adim == 1)
+            <li>Admin : True</li>
+        @else
+            <li>Admin : False</li>
+        @endif
+
     </ul>
+
+
 @endsection
