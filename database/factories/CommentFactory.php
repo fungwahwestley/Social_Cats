@@ -17,7 +17,7 @@ class CommentFactory extends Factory
     {
 
         return [
-            'content' => $this->faker->sentence,
+            'content' => $this->faker->realText,
             'user_id' => User::all()->random()->id,
             'post_id' => Post::all()->random()->id,
         ];
