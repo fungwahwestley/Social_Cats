@@ -14,12 +14,6 @@ class UserTableSeeder extends Seeder
      */
     public function run()
     {
-        $user = new User();
-        $user->name = "admin user";
-        $user->admin = 1;
-        $user->email = "adminuser@gmail.com";
-        $user->password = "adminuserpass";
-        $user->save();
 
         User::factory()->count(5)->create();
     }

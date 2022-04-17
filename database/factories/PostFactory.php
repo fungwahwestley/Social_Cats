@@ -21,5 +21,6 @@ class PostFactory extends Factory
             'image_filepath' => $this->faker->imageUrl,
             'user_id' => User::all()->random()->id,
         ];
+
     }
 }

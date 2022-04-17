@@ -56,4 +56,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function likedPosts()
+    {
+        return $this->morphedByMany(Post::class, 'likeable')->whereDeletedAt(null);
+    }
 }

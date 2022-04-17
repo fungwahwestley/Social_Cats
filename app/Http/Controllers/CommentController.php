@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Post;
 use App\Models\Comment;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Providers\Response;
@@ -12,7 +13,8 @@ use App\Providers\Response;
 class CommentController extends Controller
 {
     public function page(Post $post){
-        return view('posts.show-api', ['post'=>$post]);
+      //  return view('posts.show-api', ['post'=>$post]);
+        return view('posts.show', ['post'=>$post]);
     }
 
     public function apiIndex(Post $post)
@@ -27,13 +29,12 @@ class CommentController extends Controller
 
         $c = new Comment;
         $c->content = $validationData['content'];
-        $c->user_id = 1;
+        $c->user_id = 11;
         $c->post_id = $post->id;
         $c->save();
 
-        return $c;
+        return Comment::with('user')->findOrFail($c->id);
     }
-
 
     /**
      * Display the specified resource.
@@ -57,7 +58,7 @@ class CommentController extends Controller
         if (!(Gate::allows('update-comment', $comment) || Gate::allows('update-comment-admin'))) {
             abort(403);
         }
-        return view('comments.edit', ['comment' => $comment, 'post' => $post]);
+        return view(route('posts.show',['post'=>$post]));
 
     }
 
@@ -70,6 +71,10 @@ class CommentController extends Controller
      */
     public function update(Request $request, Comment $comment, Post $post)
     {
+
+        if (!(Gate::allows('update-comment', $comment) || Gate::allows('update-comment-admin'))) {
+            abort(403);
+        }
         $validationData = $request->validate([
             'content' => 'required|max:255',
         ]);
@@ -80,7 +85,7 @@ class CommentController extends Controller
         $comment->save();
 
         session()->flash('message', 'Comment was updated');
-        return redirect()->route('comments.show', ['comment' => $comment, 'post' => $post]);
+        return redirect()->route('posts.show',['post'=>$post]);
     }
 
     /**
@@ -95,7 +100,6 @@ class CommentController extends Controller
             abort(403);
         }
         $comment->delete();
-
         return redirect()->route('posts.index')->with('message', 'Comment was deleted');
     }
 
@@ -119,5 +123,9 @@ class CommentController extends Controller
 
         session()->flash('message', 'Comment was created');
         return redirect()->route('posts.show', ['post' => $post]);
+    }
+
+    public function abort(){
+        abort(403);
     }
 }
