@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Gate;
 use App\Models\Post;
+use App\Models\Like;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Providers\Response;
@@ -68,6 +69,7 @@ class PostController extends Controller
      * @param int $post
      * @return \Illuminate\Http\Response
      */
+
     public function show(Post $post)
     {
         $comments = $post->comments()->get();
@@ -82,14 +84,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        if(!Gate::allows('update-post-admin')){
-            abort(403);
-        }else if(Gate::allows('update-post', $post)){
-            abort(403);
-        }
 
         return view('posts.edit', ['post' => $post]);
-
 
 
     }
@@ -127,6 +123,11 @@ class PostController extends Controller
     {
         if (!(Gate::allows('delete-post', $post) || Gate::allows('delete-post-admin'))) {
             abort(403);
+        }
+
+        $likes = Like::all()->where('likeable_id', $post->id);
+        foreach ($likes as $like) {
+            $like->delete();
         }
 
         $post->delete();
