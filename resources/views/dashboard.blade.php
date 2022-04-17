@@ -14,4 +14,21 @@
             </div>
         </div>
     </div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+
+        var token = ""
+
+        // Create accces token for API.
+        axios
+            .post("{{ route('auth.create.token') }}").then((response) => {
+            token = response.data.token.substring(3);
+        }).catch(response => {
+            console.log(token)
+
+        });
+    </script>
+    {{ route('auth.create.token') }}
+
 </x-app-layout>
+

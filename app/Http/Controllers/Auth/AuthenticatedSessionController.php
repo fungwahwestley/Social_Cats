@@ -10,6 +10,13 @@ use Illuminate\Support\Facades\Auth;
 
 class AuthenticatedSessionController extends Controller
 {
+
+    public function generateToken(){
+        $user = Auth::User();
+        $token = $user->setRememberToken('api_token');
+        return ['token' => $token->plainTextToken];
+    }
+
     /**
      * Display the login view.
      *

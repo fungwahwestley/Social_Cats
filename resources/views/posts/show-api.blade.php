@@ -8,27 +8,30 @@
         <li>{{$post->image_filepath ?? ''}}</li>
         <li>Caption: {{$post->caption}}</li>
         <li>Posted by {{$post->user->name}}</li>
+        <li>Number of likes: {{$post->likes()->count()}}</li>
     </ul>
 
-    <form method="POST"
-          action="{{route('posts.destroy', ['post'=>$post])}}">
+    <form method="POST" action="{{route('likes.store', ['post'=>$post])}}">
         @csrf
-        @method('DELETE')
-        <button type="submit">Delete Post</button>
+        <input type="submit" value="like post">
     </form>
 
-    <a href="{{route('posts.edit',['post'=>$post])}}">Edit Post</a>
+
+    <li><a href="{{route('posts.edit',['post'=>$post])}}">Edit Post</a></li>
 
     <a href="{{route('posts.index')}}">Back</a>
 
     <div id="comment">
         <ul>
-            <li v-for="comment in comments">@{{ comment.content }} Posted by @{{ comment.user_id }}</li>
+            <li> Comments:</li>
+            <li v-for="comment in comments"> @{{ comment.content }} Posted by @{{ comment.user_id }}</li>
         </ul>
         Add comment: <input type="text" id="newComment" v-model="newComment">
-        <button @click="createComment">Create</button>
+        <button @click="createComment()">Create</button>
     </div>
-    <script>const Comment = {
+    <script>
+        // axios.defaults.headers.common['X-CSRF-TOKEN'] = document.querySelector('meta[name="csrf-token"]').getAttribute('id')
+        const Comment = {
             data() {
                 return {
                     comments: [],
@@ -38,6 +41,10 @@
             methods: {
                 createComment() {
                     axios.post("{{route('api.comments.store',['post'=>$post])}}", {
+                        headers: {
+                            "Content-type": "application/json",
+                            Authorization: `Bearer $(config.token)`,
+                        },
                         content: this.newComment
                     })
                         .then(response => {
@@ -50,7 +57,15 @@
                 }
             },
             mounted() {
-                axios.get("{{route('api.comments.index',['post'=>$post])}}").then(response => {
+                axios.get("{{route('api.comments.index',['post'=>$post])}}", {
+                    headers: {
+                        "Content-type": "application/json",
+                        Authorization: `Bearer $(config.token)`,
+                    }
+
+                }).then(response => {
+
+
                     this.comments = response.data;
                 }).catch(response => {
                     console.log(response);
