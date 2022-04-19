@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\UserCommented;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Post;
 use App\Models\Comment;
@@ -9,6 +10,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Providers\Response;
+use Illuminate\Support\Facades\Mail;
 
 class CommentController extends Controller
 {
@@ -32,6 +34,7 @@ class CommentController extends Controller
         $c->user_id = 11;
         $c->post_id = $post->id;
         $c->save();
+
 
         return Comment::with('user')->findOrFail($c->id);
     }
@@ -120,6 +123,8 @@ class CommentController extends Controller
         $c->user_id = Auth::user()->getAuthIdentifier();
         $c->post_id = $post->id;
         $c->save();
+
+        Mail::to($post->user()->get())->send(new UserCommented($c));
 
         session()->flash('message', 'Comment was created');
         return redirect()->route('posts.show', ['post' => $post]);
