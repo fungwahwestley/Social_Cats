@@ -7,9 +7,6 @@
 
     <x-guest-layout>
 
-        <a class="flex items-center justify-start underline text-sm text-gray-600 hover:text-gray-900"
-           href="{{route('posts.show',['post'=>$post])}}">
-            Back</a>
         <x-create-post-card>
 
             <x-slot name="logo">
@@ -33,11 +30,11 @@
                 </div>
                 <!-- Image -->
                 <div class="mt-4">
-                    <x-label for="image_filepath" :value="__('Image')"/>
+                    <div>
+                        <x-label for="image" :value="__('Add photo')"/>
 
-                    <x-input id="image_filepath" class="block mt-1 w-full" type="text" name="image_filepath"
-                             :value="$post->image_filepath"
-                             autofocus/>
+                        <x-input id="image" class="block mt-1 w-full" type="file" required name="image" required autofocus/>
+                    </div>
                 </div>
 
                 <div class="flex items-center justify-end mt-4">
