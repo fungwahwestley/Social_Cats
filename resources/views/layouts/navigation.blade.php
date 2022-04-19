@@ -81,8 +81,8 @@
     <!-- Responsive Navigation Menu -->
     <div :class="{'block': open, 'hidden': ! open}" class="hidden sm:hidden">
         <div class="pt-2 pb-3 space-y-1">
-            <x-responsive-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
-                {{ __('Dashboard') }}
+            <x-responsive-nav-link :href="route('posts.index')" :active="request()->routeIs('posts.index')">
+                {{ __('Main Feed') }}
             </x-responsive-nav-link>
         </div>
 
@@ -107,4 +107,17 @@
             </div>
         </div>
     </div>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script>
+
+        var token = ""
+        axios
+            .post("{{ route('auth.create.token') }}").then((response) => {
+            //.substring(3);
+            token = response.data.token
+            console.log(token);
+        }).catch(error => {
+            console.log(error.response)
+        });
+    </script>
 </nav>
