@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PostController;
 use App\Http\Controllers\ProfileController;
@@ -28,37 +29,36 @@ Route::middleware(['auth'])->group(function () {
 
 
     //generate token route
-    Route::get('/token',[AuthenticatedSessionController::class, 'generateToken'])->name('auth.create.token');
+    Route::post('/token', [AuthenticatedSessionController::class, 'generateToken'])->name('auth.create.token');
 
     //Post routes
     Route::get('/posts', [PostController::class, 'index'])->name('posts.index');
     Route::get('/posts/create', [PostController::class, 'create'])->name('posts.create');
     Route::post('/posts', [PostController::class, 'store'])->name('posts.store');
     Route::get('/posts/{post}', [PostController::class, 'show'])->name('posts.show');
-  //Route::get('/posts/{post}', [CommentController::class, 'page'])->name('posts-api.show');
+    // Route::get('/posts/{post}', [CommentController::class, 'page'])->name('posts-api.show');
     Route::delete('/posts/{post}', [PostController::class, 'destroy'])->name('posts.destroy');
     Route::get('/posts{post}/edit', [PostController::class, 'edit'])->name('posts.edit');
     Route::put('/posts/{post}', [PostController::class, 'update'])->name('posts.update');
 
     //like routes
     Route::post('/posts/{post}/like', [LikeController::class, 'postStore'])->name('likes-post.store');
- //   Route::delete('/posts/{post}/like', [LikeController::class, 'postDestroy'])->name('likes-post.destroy');
     Route::post('/comments/{comment}/like', [LikeController::class, 'commentStore'])->name('likes-comment.store');
-   // Route::delete('/comments/{comment}/like', [LikeController::class, 'commentDestroy'])->name('likes-comment.destroy');
 
 
     //comment routes
-    //Route::get('/posts/{post}', [CommentController::class, 'page'])->name('posts-api.show');
+    //  Route::get('/posts/{post}', [CommentController::class, 'page'])->name('posts-api.show');
     Route::post('/posts/{post}', [CommentController::class, 'store'])->name('comments.store');
     Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
     Route::put('/comments/{comment}', [CommentController::class, 'update'])->name('comments.update');
-    Route::get('/abort',[CommentController::class,'abort'])->name('comments.abort');
+    Route::get('/abort', [CommentController::class, 'abort'])->name('comments.abort');
 
     //profile routes
+    Route::get('/profile/{user}', [ProfileController::class, 'show'])->name('profile.show');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile.index');
 
-
 });
+
 
 
 Route::get('/dashboard', function () {
