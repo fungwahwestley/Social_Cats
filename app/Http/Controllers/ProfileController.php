@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\Comment;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -16,10 +17,13 @@ class ProfileController extends Controller
      */
     public function index()
     {
-      //  $posts = Post::all()->where('user_id',Auth::user()->getAuthIdentifier());
-      //  $comments = Comment::all()->where('user_id',Auth::user()->getAuthIdentifier());
-        $user = Auth::user();
-        return view('profile.index', ['user' => $user]);
+        return view('profile.index');
+    }
+
+
+    public function show(User $user)
+    {
+        return view('profile.show', ['user' => $user]);
     }
 
 
