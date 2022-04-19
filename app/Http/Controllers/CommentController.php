@@ -13,7 +13,7 @@ use App\Providers\Response;
 class CommentController extends Controller
 {
     public function page(Post $post){
-      //  return view('posts.show-api', ['post'=>$post]);
+        //return view('posts.show-api', ['post'=>$post]);
         return view('posts.show', ['post'=>$post]);
     }
 
