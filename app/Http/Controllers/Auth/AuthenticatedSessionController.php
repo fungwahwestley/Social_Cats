@@ -12,9 +12,9 @@ class AuthenticatedSessionController extends Controller
 {
 
     public function generateToken(){
-        $user = Auth::User();
-        $token = $user->setRememberToken('api_token');
-        return ['token' => $token->plainTextToken];
+        $authUser = Auth::User();
+        $tokenForAuth = $authUser->createToken('auth-token');
+        return ['token' => $tokenForAuth->plainTextToken];
     }
 
     /**
