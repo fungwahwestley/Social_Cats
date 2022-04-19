@@ -18,8 +18,8 @@ class PostFactory extends Factory
 
         return [
             'caption' => $this->faker->realText,
-            'image_filepath' => $this->faker->imageUrl,
             'user_id' => User::all()->random()->id,
+            'path'=> null,
         ];
 
     }
