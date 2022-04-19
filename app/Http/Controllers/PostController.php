@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Photo;
 use Illuminate\Support\Facades\Gate;
 use App\Models\Post;
 use App\Models\Like;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Providers\Response;
+use Illuminate\Support\Facades\Storage;
 
 class PostController extends Controller
 {
@@ -49,12 +51,15 @@ class PostController extends Controller
     {
         $validationData = $request->validate([
             'caption' => 'required|max:255',
-            'image_filepath' => 'nullable|max:500',
         ]);
 
         $p = new Post;
         $p->caption = $validationData['caption'];
-        $p->image_filepath = $validationData['image_filepath'];
+        $storagePath = $request->file('image')->store('images');
+        $path = Storage::url($storagePath);
+        $p->path = $path;
+
+
         $p->user_id = Auth::user()->getAuthIdentifier();
         $p->save();
 
@@ -73,6 +78,7 @@ class PostController extends Controller
     public function show(Post $post)
     {
         $comments = $post->comments()->get();
+        $user = $post->user()->get();
         return view('posts.show', ['post' => $post, 'comments' => $comments]);
     }
 
@@ -101,11 +107,9 @@ class PostController extends Controller
     {
         $validationData = $request->validate([
             'caption' => 'required|max:255',
-            'image_filepath' => 'nullable|max:500',
         ]);
 
         $post->caption = $validationData['caption'];
-        $post->image_filepath = $validationData['image_filepath'];
         $post->user_id = Auth::user()->getAuthIdentifier();
         $post->save();
 
