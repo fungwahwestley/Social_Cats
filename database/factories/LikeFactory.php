@@ -17,16 +17,20 @@ class LikeFactory extends Factory
      */
     public function definition()
     {
-        if(Comment::all()->count() > Post::all()->count()){
-            $likeable_id = Comment::all()->random()->id;
-        }else{
+        $likeable_type = "";
+        $likeable_id = 0;
+        $type = $this->faker->randomElement([Post::class,Comment::class]);
+        if($type == Post::class){
+            $likeable_type = Post::class;
             $likeable_id = Post::all()->random()->id;
+        }else if($type == Comment::class){
+            $likeable_id = Comment::all()->random()->id;
         }
 
         return [
            'user_id'=>User::all()->random()->id,
             'likeable_id'=> $likeable_id,
-            'likeable_type'=> $this->faker->randomElement([Post::class,Comment::class]),
+            'likeable_type'=> $likeable_type,
         ];
     }
 }
