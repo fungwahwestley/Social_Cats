@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\UserLikedComment;
+use App\Mail\UserLikedPost;
 use Illuminate\Http\Request;
 use App\Models\Post;
 use App\Models\Comment;
@@ -9,6 +11,7 @@ use App\Models\Like;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Mail;
 
 
 class LikeController extends Controller
@@ -42,9 +45,9 @@ class LikeController extends Controller
             $l->likeable_type = Post::class;
             $l->save();
 
+            Mail::to($post->user()->get())->send(new UserLikedPost($l));
+
             session()->flash('message', 'Post was liked');
-        } else {
-            session()->flash('message', 'Post already liked');
         }
 
         return redirect()->back();
@@ -72,62 +75,12 @@ class LikeController extends Controller
             $l->likeable_type = Comment::class;
             $l->save();
 
+            Mail::to($comment->user()->get())->send(new UserLikedComment($l));
+
             session()->flash('message', 'Comment was liked');
-        } else {
-            session()->flash('message', 'Comment already liked');
         }
 
         return redirect()->back();
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $post
-     * @return \Illuminate\Http\Response
-     */
-    public function postDestroy(Post $post)
-    {
-
-        $likes = Like::all();
-        foreach ($likes as $like) {
-            if ($like->likeable_id == $post->id && $like->user_id == Auth::user()->getAuthIdentifier() && $like->likeable_type == 'Post::class') {
-                $like->delete();
-                session()->flash('message', 'Like was removed');
-
-            }else{
-                session()->flash('message', 'Post not liked!');
-            }
-        }
-
-
-        return redirect()->back();
-
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param int $post
-     * @return \Illuminate\Http\Response
-     */
-    public function commentDestory(Comment $comment)
-    {
-
-        $likes = Like::all();
-        foreach ($likes as $like) {
-            if ($like->likeable_id == $comment->id && $like->user_id == Auth::user()->getAuthIdentifier() && $like->likeable_type == 'Comment::class') {
-                $like->delete();
-                session()->flash('message', 'Like was removed');
-
-            }else{
-                session()->flash('message', 'Post not liked!');
-            }
-        }
-
-
-        return redirect()->back();
-
     }
 
 }
