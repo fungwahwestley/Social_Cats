@@ -34,4 +34,5 @@ class Like extends Model
     {
         return $this->morphedByMany(Post::class, 'likeable');
     }
+
 }
