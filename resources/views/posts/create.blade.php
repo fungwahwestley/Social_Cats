@@ -13,7 +13,7 @@
             <!-- Validation Errors -->
             <x-auth-validation-errors class="mb-4" :errors="$errors"/>
 
-            <form method="POST" action="{{route('posts.store')}}">
+            <form method="POST" action="{{route('posts.store')}}" enctype="multipart/form-data">
             @csrf
 
             <!-- caption -->
@@ -26,11 +26,11 @@
                 </div>
                 <!-- Image -->
                 <div class="mt-4">
-                    <x-label for="image_filepath" :value="__('Image')"/>
+                    <div>
+                        <x-label for="image" :value="__('Add photo')"/>
 
-                    <x-input id="image_filepath" class="block mt-1 w-full" type="text" name="image_filepath"
-                             :value="old('image_filepath')"
-                             autofocus/>
+                        <x-input id="image" class="block mt-1 w-full" type="file" name="image" required autofocus/>
+                    </div>
                 </div>
 
                 <div class="flex items-center justify-end mt-4">
