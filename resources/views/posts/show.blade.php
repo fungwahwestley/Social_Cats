@@ -5,7 +5,9 @@
 @section('content')
 
 
-    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{route('posts.index')}}"> Back<br><br></a>
+    <a class="underline text-sm text-gray-600 hover:text-gray-900" href="{{route('posts.index')}}"> Back to Main Feed<br><br></a>
+
+
 
     <div class="hidden sm:flex sm:items sm:ml-6">
         <x-dropdown align="right" width="35">
@@ -13,7 +15,10 @@
                 <div
                     class="text-black hover:text-gray-500 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
                     <ul>
-                        <li>{{$post->image_filepath ?? ''}}</li>
+                        @if($post->path != null)
+                            <img src="'http://localhost'+{{$post->path}}"
+                                 style="height: 200px; width: 250px;">
+                        @endif
                         <li>Caption: {{$post->caption}}</li>
                     </ul>
                 </div>
@@ -50,7 +55,7 @@
     <div>
 
         <ul>
-            <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Posted by {{$post->user->name}} |
+            <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Posted by <a href="{{route('profile.show',['user'=>$post->user])}})">{{$post->user->name}}</a> |
                 Likes: {{$post->likes()->count()}}</li>
             <form method="POST"
                   action="{{route('likes-post.store', ['post'=>$post])}}">
@@ -90,10 +95,11 @@
                 <x-dropdown align="right" width="48">
                     <x-slot name="trigger">
                         <li>{{$comment->content}}
-                            by {{$comment->user->name}} | Likes: {{$comment->likes()->count()}}</li>
+                            by <a href="{{route('profile.show',['user'=>$comment->user])}}">{{$comment->user->name}}</a> | Likes: {{$comment->likes()->count()}}</li>
                     </x-slot>
                     <x-slot name="content">
-                        <form method="POST" action="{{route('comments.destroy', ['comment'=>$comment, 'post' => $post]) }}">
+                        <form method="POST"
+                              action="{{route('comments.destroy', ['comment'=>$comment, 'post' => $post]) }}">
                             @csrf
                             @method('DELETE')
 
@@ -107,6 +113,8 @@
                     </x-slot>
                 </x-dropdown>
             </div>
+
+
             <form method="POST"
                   action="{{route('likes-comment.store', ['comment'=>$comment])}}">
                 @csrf
