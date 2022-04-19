@@ -6,14 +6,26 @@
 
 @section('content')
     <ul>
-        <p>User information: </p>
-        <li>Name: {{$user->name}}</li>
-        <li>Email: {{$user->email}}</li>
-        @if($user->adim == 1)
+        <li>Name: {{Auth::user()->name}}</li>
+        <li>Email: {{Auth::user()->email}}</li>
+        @if(Auth::user()->adim == 1)
             <li>Admin : True</li>
-        @else
-            <li>Admin : False</li>
         @endif
+
+
+        <br/><br/>
+        <p class="font-semibold text-lg">Posts: </p>
+
+        <ul>
+        @foreach(Auth::user()->posts()->get() as $post)
+
+            <!-- <img src="{{ url('public/image/'.$post->path) }}"
+                 style="height: 100px; width: 150px;">-->
+                <li><a href="{{route('posts.show', ['post'=>$post])}}">{{$post->caption}} by {{$post->user->name}}</a>
+                </li>
+                <li>Likes: {{$post->likes()->count()}} | Comments: {{$post->comments()->count()}}<br/><br/></li>
+        @endforeach
+        </ul>
 
     </ul>
 
