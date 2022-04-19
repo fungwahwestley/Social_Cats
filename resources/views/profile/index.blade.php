@@ -17,14 +17,16 @@
         <p class="font-semibold text-lg">Posts: </p>
 
         <ul>
-        @foreach(Auth::user()->posts()->get() as $post)
+            @foreach(Auth::user()->posts()->get() as $post)
 
-            <!-- <img src="{{ url('public/image/'.$post->path) }}"
-                 style="height: 100px; width: 150px;">-->
+                @if($post->path != null)
+                    <img src="{{ asset('storage/'.$post->path)}}"
+                         style="height: 100px; width: 150px;">
+                @endif
                 <li><a href="{{route('posts.show', ['post'=>$post])}}">{{$post->caption}} by {{$post->user->name}}</a>
                 </li>
                 <li>Likes: {{$post->likes()->count()}} | Comments: {{$post->comments()->count()}}<br/><br/></li>
-        @endforeach
+            @endforeach
         </ul>
 
     </ul>
