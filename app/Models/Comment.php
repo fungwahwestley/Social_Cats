@@ -31,9 +31,4 @@ class Comment extends Model
         return !is_null($like);
     }
 
-    public function getLikesCount()
-    {
-        $like = $this->likes();
-        return !is_null($like);
-    }
 }
