@@ -27,10 +27,10 @@
     </div>
     @enderror
 
-    @if(session('message'))
-        <p><b>{{session('message')}}</b></p>
-    @endif
 
+    @if(session('message'))
+        <p class="text-sm text-gray-600"><b>{{session('message')}}</b></p>
+    @endif
 
 
     <div class="py-12">
