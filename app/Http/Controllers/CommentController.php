@@ -15,8 +15,7 @@ use Illuminate\Support\Facades\Mail;
 class CommentController extends Controller
 {
     public function page(Post $post){
-        //return view('posts.show-api', ['post'=>$post]);
-        return view('posts.show', ['post'=>$post]);
+        return view('posts.show-api', ['post'=>$post]);
     }
 
     public function apiIndex(Post $post)
@@ -88,7 +87,7 @@ class CommentController extends Controller
         $comment->save();
 
         session()->flash('message', 'Comment was updated');
-        return redirect()->route('posts.show',['post'=>$post]);
+        return redirect()->route('posts.show',['post'=>$comment->post_id]);
     }
 
     /**
@@ -120,7 +119,7 @@ class CommentController extends Controller
 
         $c = new Comment;
         $c->content = $validationData['content'];
-        $c->user_id = Auth::user()->getAuthIdentifier();
+        $c->user_id = $request->user_id;
         $c->post_id = $post->id;
         $c->save();
 
