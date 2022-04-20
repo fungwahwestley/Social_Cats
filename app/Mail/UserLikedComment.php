@@ -40,6 +40,6 @@ class UserLikedComment extends Mailable
 
 
         return $this->from('notifications@catagram.com', 'Catagram Team')
-            ->markdown('mail.user-liked-posts', ['user' => $userWhoLiked]);
+            ->markdown('mail.user-liked-comments', ['user' => $userWhoLiked]);
     }
 }
