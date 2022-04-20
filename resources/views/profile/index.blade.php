@@ -8,7 +8,7 @@
     <ul>
         <li>Name: {{Auth::user()->name}}</li>
         <li>Email: {{Auth::user()->email}}</li>
-        @if(Auth::user()->adim == 1)
+        @if(Auth::user()->admin == 1)
             <li>Admin : True</li>
         @endif
 
@@ -20,7 +20,7 @@
             @foreach(Auth::user()->posts()->get() as $post)
 
                 @if($post->path != null)
-                    <img src="{{ asset('storage/'.$post->path)}}"
+                    <img src="{{ url($post->path)}}"
                          style="height: 100px; width: 150px;">
                 @endif
                 <li><a href="{{route('posts.show', ['post'=>$post])}}">{{$post->caption}} by {{$post->user->name}}</a>

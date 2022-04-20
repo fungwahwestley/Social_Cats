@@ -16,8 +16,8 @@
                     class="text-black hover:text-gray-500 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
                     <ul>
                         @if($post->path != null)
-                            <img src="'http://localhost'+{{$post->path}}"
-                                 style="height: 200px; width: 250px;">
+                            <img src="{{ url($post->path)}}"
+                                 style="height: 300px; width: 350px;">
                         @endif
                         <li>Caption: {{$post->caption}}</li>
                     </ul>

@@ -6,7 +6,7 @@
     <ul>
         @foreach($posts as $post)
             @if($post->path != null)
-                <img src="{{ url('public/images'.$post->path) }}"
+                <img src="{{ url($post->path)}}"
                      style="height: 100px; width: 150px;">
             @endif
             <li><a href="{{route('posts.show', ['post'=>$post])}}">{{$post->caption}} by {{$post->user->name}}</a></li>
