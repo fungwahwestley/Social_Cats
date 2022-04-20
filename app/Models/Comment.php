@@ -25,10 +25,5 @@ class Comment extends Model
         return $this->morphToMany(User::class, 'likeable')->whereDeletedAt(null);
     }
 
-    public function getIsLikedAttribute()
-    {
-        $like = $this->likes()->whereUserId(Auth::user()->getAuthIdentifier())->first();
-        return !is_null($like);
-    }
 
 }
