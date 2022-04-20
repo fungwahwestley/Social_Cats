@@ -55,7 +55,7 @@ class PostController extends Controller
 
         $p = new Post;
         $p->caption = $validationData['caption'];
-        $storagePath = $request->file('image')->store('images');
+        $storagePath = $request->file('image')->store('public/images');
         $path = Storage::url($storagePath);
         $p->path = $path;
 
@@ -90,6 +90,9 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
+        if (!(Gate::allows('update-post', $post) || Gate::allows('update-post-admin'))) {
+            abort(403);
+        }
 
         return view('posts.edit', ['post' => $post]);
 
