@@ -1,6 +1,6 @@
 @extends('layouts.create-file')
 
-@section('title','Create Post')
+@section('title','Edit Post')
 
 @section('content')
 
@@ -33,7 +33,7 @@
                     <div>
                         <x-label for="image" :value="__('Add photo')"/>
 
-                        <x-input id="image" class="block mt-1 w-full" type="file" required name="image" required autofocus/>
+                        <x-input id="image" class="block mt-1 w-full" type="file" name="image" required autofocus/>
                     </div>
                 </div>
 
